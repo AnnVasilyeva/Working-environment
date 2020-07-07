@@ -129,6 +129,12 @@ npm install core-js@3
 
 Создать файл `.browserslistrc` 
 (позволяет установить, поддержку каких браузеров (окружений) необходимо обеспечивать, исходя из статистики [caniuse.com](https://caniuse.com/))
+```
+last 1 version
+> 1%
+maintained node versions
+not dead
+```
 
 ## WEBPACK installation
 
