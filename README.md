@@ -1,5 +1,8 @@
 # Working-environment for frontend-developer (instruction)
 
+* [Установка ESLint](#eslint-installation)
+
+
 1. Создать:
     - файл [.gitignore](https://github.com/AnnVasilyeva/Working-environment/blob/master/.gitignore) c содержимым
     - папку `src` - папки js и css, файлы index.html и index.js 
@@ -21,7 +24,7 @@
           author --
           license (ISC)
               
-## Установка ESLint 
+## ESLint installation
 
 (инструмент, отслеживающий стиль кодирования и типичные ошибки в мире JS)
   
