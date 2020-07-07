@@ -1,6 +1,9 @@
 # Working-environment for frontend-developer (instruction)
 
 * [Установка ESLint](#eslint-installation)
+* [Установка BABEL](#babel-installation)
+* [Установка WEBPACK](#webpack-installation)
+* [Установка JEST](#jest-installation)
 
 
 1. Создать:
@@ -95,9 +98,9 @@ docs
 
 Исправление проблем ```npm run lint -- --fix```
 
-## Установка BABEL
+## BABEL installation
 
-(инструмент, преобразующий код из одной версии стандарта в другую, более старую. Можно не устанавливать отдельно, а установить вместе с JEST)
+(инструмент, преобразующий код из одной версии стандарта в другую, более старую. Можно не устанавливать отдельно, а установить вместе с [JEST](#jest-installation))
 
 ```
 npm install --save-dev @babel/core @babel/cli @babel/preset-env 
@@ -127,7 +130,7 @@ npm install core-js@3
 Создать файл `.browserslistrc` 
 (позволяет установить, поддержку каких браузеров (окружений) необходимо обеспечивать, исходя из статистики [caniuse.com](https://caniuse.com/))
 
-## Установка WEBPACK 
+## WEBPACK installation
 
 (самый популярный инструмент сборки в мире JS)
 
@@ -197,7 +200,7 @@ npm install --save-dev webpack-dev-server
 ```
 Запуск сервера ```npm start```
 
-## Установка JEST
+## JEST installation
 
 (фреймворк для тестирования, устанавливается вместе с BABEL, так что предварительно BABEL можно не устанавливать)
 
@@ -258,9 +261,9 @@ test('проверка индикации жизни при здоровье 50'
 });
 ```
 
-### Покрытие кода
+### Code Coverage
 
-(Code Coverage - метрика, показывающая, насколько наш код покрыт авто- тестами)
+(Покрытие кода - метрика, показывающая, насколько наш код покрыт авто- тестами)
 
 ```npm test -- --coverage```
 
