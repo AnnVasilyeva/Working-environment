@@ -151,7 +151,7 @@ npm install --save-dev webpack webpack-cli babel-loader
 ```
 Сборка ```npm run build```
 
-Создаем базовый файл `.webpack.config.js`
+Создаем базовый файл `webpack.config.js`
 ```
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -174,8 +174,28 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+        },
+      },
+      {
+        test: /\.html$/i,
+        loader: 'html-loader',
+      },
+      {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, "css-loader"],
+      },
+      {
+        test: /\.(png|jpg|gif)$/i,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+            limit: 8192,
+          },
       },
     ],
   },
@@ -190,6 +210,14 @@ npm install --save-dev html-webpack-plugin
 Установка плагина CSS
 ```
 npm install --save-dev mini-css-extract-plugin css-loader
+```
+Установка html-loader (Экспортирует HTML как строку. HTML минимизируется, когда этого требует компилятор)
+```
+npm install --save-dev html-loader
+```
+Установка url-loader (чтобы собрать картинки, прописанные в CSS)
+```
+npm install url-loader --save-dev
 ```
 Установка WEBPACK DEV SERVER
 
@@ -272,5 +300,31 @@ test('проверка индикации жизни при здоровье 50'
 (Покрытие кода - метрика, показывающая, насколько наш код покрыт авто- тестами)
 
 ```npm test -- --coverage```
+
+### AppVeyor (если используете)
+
+Создаем файл ```.appveyor.yml```
+```
+image: Ubuntu1804  # образ для сборки
+
+stack: node 12  # окружение
+
+branches:
+  only:
+    - master  # ветка git
+
+cache: node_modules  # кеширование
+
+install:
+  - npm install  # команда установки зависимостей
+
+build: off  # отключаем встроенную в appveyor систему сборки
+
+build_script:
+  - npm run build   # команда сборки
+
+test_script:
+  - npm run lint && npm test  # скрипт тестирования
+```
 
 
