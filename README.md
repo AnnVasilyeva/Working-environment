@@ -73,10 +73,37 @@
         "sourceType": "module"
     }, 
     "rules": {
+        //поддерживает ++
+        "no-plusplus": "off",
+
+        //не ругается если есть вывод в консоль
+        "no-console": "off",
+
         "no-restricted-syntax": [
-            "error", 
-            "LabeledStatement", 
+            "error",
+            "LabeledStatement",
             "WithStatement"
+        ],
+
+        //не ругается на разные варианты знаков 
+        "no-mixed-operators": [
+            "error",
+            {
+                "groups": [
+                    ["+", "*", "/", "%"],
+                    ["&", "|", "^", "~", "<<", ">>", ">>>"],
+                    ["==", "!=", "===", "!==", ">", ">=", "<", "<="],
+                    ["&&", "||"],
+                    ["in", "instanceof"]
+                ],
+                "allowSamePrecedence": true
+            }
+        ],
+
+        //максимальная длина строки кода 200 символов, можно менять
+        "max-len": [
+            "error",
+            { "code": 200 }
         ]
      }
 }
@@ -219,6 +246,20 @@ npm install --save-dev html-loader
 ```
 npm install url-loader --save-dev
 ```
+либо Установка file-loader (Отправляет файл в папку вывода и возвращает (относительный) URL-адрес)
+```
+npm install file-loader --save-dev
+```
+пример в webpack.config.js для формата favicon.ico
+```
+{
+    test: /\.ico$/,
+    loader: 'file-loader',
+    options: {
+      name: '[name].[ext]',
+},
+```
+
 Установка WEBPACK DEV SERVER
 
 (если нужен)
@@ -233,6 +274,70 @@ npm install --save-dev webpack-dev-server
 },
 ```
 Запуск сервера ```npm start```
+
+## Разделение конфигураций (webpack) 
+
+Установка пакета webpack-merge
+```
+npm install --save-dev webpack-merge
+ или 
+yarn add --dev webpack-merge
+```
+Создаем три файла:
+- webpack.common.js
+- webpack.prod.js
+- webpack.dev.js
+
+В scripts меняем:
+```
+"start": "webpack-dev-server --config webpack.dev.js",
+"build": "webpack --config webpack.prod.js",
+```
+В webpack.common.js переносим все из webpack.config.js и удаляем последний.
+
+Устанавливаем плагины:
+- TerserPlugin (будет минимизировать JS)
+```
+npm install terser-webpack-plugin --save-dev
+```
+- OptimizeCSSAssetsPlugin (будет оптимизировать \ минимизировать CSS)
+```
+npm install --save-dev optimize-css-assets-webpack-plugin
+```
+
+P.S. при дальнейшей сборке была проблема с тем, что все плагины установились в package.json "devDependencies" а должны были в "dependencies" 
+(исправила переносом вручную).
+ 
+ В webpack.prod.js прописываем
+```
+const { merge } = require('webpack-merge');
+const TerserPlugin = require('terser-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const common = require('./webpack.common');
+
+module.exports = merge(common, {
+  mode: 'production',
+  optimization: {
+    minimizer: [
+      new TerserPlugin({}),
+      new OptimizeCSSAssetsPlugin({}),
+    ],
+  },
+});
+```
+В webpack.dev.js прописываем
+```
+const { merge } = require('webpack-merge');
+const common = require('./webpack.common');
+
+module.exports = merge(common, {
+  mode: 'development',
+  devtool: 'inline-source-map',
+  devServer: {
+    contentBase: './dist',
+  },
+});
+```
 
 ## JEST installation
 
@@ -312,6 +417,8 @@ stack: node 12  # окружение
 branches:
   only:
     - master  # ветка git
+  except:
+      - gh-pages
 
 cache: node_modules  # кеширование
 
@@ -325,6 +432,13 @@ build_script:
 
 test_script:
   - npm run lint && npm test  # скрипт тестирования
+
+deploy_script:
+  - git config --global credential.helper store
+  - git config --global user.name AppVeyor
+  - git config --global user.email ci@appveyor.com
+  - echo "https://$GITHUB_TOKEN:x-oauth-basic@github.com" > "$HOME/.git-credentials"
+  - npx push-dir --dir=dist --branch=gh-pages --force --verbose
 ```
 
 
